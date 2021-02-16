@@ -1,7 +1,9 @@
 <?php
 include_once "header.php";           
+?>
 
-echo '<h1>Pozdrav</h1>';
+<a href="users.php?username=vssscv&visina=190&teza=90&oci=modre">Uporabniki</a>
 
+<?php
 include_once "footer.php";
 ?>
