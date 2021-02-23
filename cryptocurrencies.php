@@ -1,7 +1,7 @@
 <?php 
     include_once "header.php";
 ?>
-
+--
 <h1>Kripto valute</h1>
 
 <a href="cryptocurrency_add.php" class="btn btn-primary">Dodaj valuto</a>
