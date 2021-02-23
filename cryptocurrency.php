@@ -32,6 +32,8 @@ $crypto = $stmt->fetch();
         </div>
         <!-- Masthead Subheading-->
         <p class="masthead-subheading font-weight-light mb-0"><?php echo $crypto['description'];?></p>
+        <div calss="cypro_price">Trenutna cena: <span><?php echo $crypto['current_price'];?></span></div>
+        <div calss="cypro_rating">Trenutna ocena: <span><?php echo $crypto['rating'];?></span></div>
     </div>
 </section>
 
