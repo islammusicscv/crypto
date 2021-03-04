@@ -20,8 +20,9 @@ $crypto = $stmt->fetch();
     //prikaže povezavo samo administratorjem
     if (admin()) {
 ?>
-    <a href="cryptocurrency_delete.php?id=<?php echo $crypto['id'];?>" class="btn btn-primary" onclick="return confirm('Prepričani?')">Izbriši</a>
-    <a href="cryptocurrency_edit.php?id=<?php echo $crypto['id'];?>" class="btn btn-primary">Uredi</a>
+<a href="cryptocurrency_delete.php?id=<?php echo $crypto['id'];?>" class="btn btn-primary"
+    onclick="return confirm('Prepričani?')">Izbriši</a>
+<a href="cryptocurrency_edit.php?id=<?php echo $crypto['id'];?>" class="btn btn-primary">Uredi</a>
 <?php
     }
 ?>
@@ -40,25 +41,92 @@ $crypto = $stmt->fetch();
         <!-- Masthead Subheading-->
         <p class="masthead-subheading font-weight-light mb-0"><?php echo $crypto['description'];?></p>
         <div calss="cypro_price">Trenutna cena: <span><?php echo $crypto['current_price'];?></span></div>
-        <div calss="cypro_rating">Trenutna ocena: <span><?php echo number_format($crypto['rating'],1,',',".");?></span></div>
+        <div calss="cypro_rating">Trenutna ocena: <span><?php echo number_format($crypto['rating'],1,',',".");?></span>
+        </div>
     </div>
+    <?php
+    if (admin()) {
+    ?>
+    <div class="upload_slik">
+        <form action="image_insert.php" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="id" value="<?php echo $crypto['id'];?>" />
+            <input type="text" name="title" placeholder="Vnesi naslov fotografije" /><br />
+            <input type="file" name="url" required="required" /> <br />
+            <input type="submit" value="Naloži" />
+        </form>
+    </div>
+    <?php 
+    }
+    ?>
 </section>
+<div class="container">
+    <?php
+    $query = "SELECT * FROM images WHERE cryptocurrency_id=?";
+    $stmt= $pdo->prepare($query);
+    $stmt->execute([$id]);
+    //koliko slik je v bazi za to kriptovaluto
+    $st = $stmt->rowCount();
+    if ($st >0) {
+    ?>
+    <div class="bd-example">
+        <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+            <?php
+                for($i=0;$i<$st;$i++) {                    
+                    if ($i==0) 
+                        echo '<li data-target="#carouselExampleCaptions" data-slide-to="'.$i.'" class="active"></li>'."\n";
+                    else 
+                        echo '<li data-target="#carouselExampleCaptions" data-slide-to="'.$i.'"></li>'."\n";
+                }                
+            ?>  
+            </ol>
+            <div class="carousel-inner">
+                <?php
+                    $i = 0;
+                    while($row=$stmt->fetch()) {                       
+                        if ($i==0) 
+                            echo '<div class="carousel-item active">'."\n";                        
+                        else 
+                            echo '<div class="carousel-item">'."\n";                    
+                        echo '<img src="'.$row['url'].'" class="d-block w-100" alt="slika" />'."\n";
+                        echo '<div class="carousel-caption d-none d-md-block">'."\n";
+                        echo '<h5>'.$row['title'].'</h5>'."\n";
+                        echo '</div>'."\n";
+                        echo '</div>'."\n";
+                        $i++;
+                    }
+                ?>
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+<?php 
+    }
+?>
+</div>
 <div class="container d-flex justify-content-center mt-20">
     <div class="row">
         <div class="col-md-12">
             <div class="stars">
                 <form action="rate_insert.php" method="post">
-                    <input type="hidden" name="id" value="<?php echo $crypto['id'];?>" /> 
-                    <input class="star star-5" id="star-5" type="radio" name="star" value="5" /> 
-                    <label class="star star-5" for="star-5"></label> 
-                    <input class="star star-4" id="star-4" type="radio" name="star" value="4" /> 
-                    <label class="star star-4" for="star-4"></label> 
-                    <input class="star star-3" id="star-3" type="radio" name="star" value="3" /> 
-                    <label class="star star-3" for="star-3"></label> 
-                    <input class="star star-2" id="star-2" type="radio" name="star" value="2" /> 
-                    <label class="star star-2" for="star-2"></label> 
-                    <input class="star star-1" id="star-1" type="radio" name="star" value="1" /> 
-                    <label class="star star-1" for="star-1"></label> 
+                    <input type="hidden" name="id" value="<?php echo $crypto['id'];?>" />
+                    <input class="star star-5" id="star-5" type="radio" name="star" value="5" />
+                    <label class="star star-5" for="star-5"></label>
+                    <input class="star star-4" id="star-4" type="radio" name="star" value="4" />
+                    <label class="star star-4" for="star-4"></label>
+                    <input class="star star-3" id="star-3" type="radio" name="star" value="3" />
+                    <label class="star star-3" for="star-3"></label>
+                    <input class="star star-2" id="star-2" type="radio" name="star" value="2" />
+                    <label class="star star-2" for="star-2"></label>
+                    <input class="star star-1" id="star-1" type="radio" name="star" value="1" />
+                    <label class="star star-1" for="star-1"></label>
                     <input type="submit" value="Glasuj" class="btn btn-primary" />
                 </form>
             </div>
@@ -68,7 +136,7 @@ $crypto = $stmt->fetch();
 <div class="komentarji" id="komentarji">
     <div class="obrazec">
         <form action="comment_insert.php" method="post">
-            <input type="hidden" name="id" value="<?php echo $crypto['id'];?>" /> 
+            <input type="hidden" name="id" value="<?php echo $crypto['id'];?>" />
             <textarea name="content" rows="5" cols="25"></textarea> <br />
             <input type="submit" value="Komentiraj" class="btn btn-primary" />
         </form>
@@ -125,9 +193,9 @@ $crypto = $stmt->fetch();
 
             }
         ?>
-        
+
     </div>
-</div>	
+</div>
 
 <?php 
 include_once "footer.php";
