@@ -40,6 +40,8 @@ if ($uploadOk == 1) {
         $stmt = $pdo->prepare($query);
         $stmt->execute([$title,$target_file,$id,$_SESSION['user_id']]);
 
+        odziv("Slika dodana");
+
         header("Location: cryptocurrency.php?id=$id");
         die();
 

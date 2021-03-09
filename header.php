@@ -66,6 +66,9 @@
             //pogledam, če obstaja odziv ga izpišem
             if (isset($_SESSION['odziv'])) {
                 echo '<div id="odziv">'.$_SESSION['odziv'].'</div>';
+
+                //enkrat je izpisal, zato ga lkahko izbrišem
+                unset($_SESSION['odziv']);
             }
          ?>        
     </nav>

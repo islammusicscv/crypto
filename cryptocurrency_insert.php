@@ -42,6 +42,8 @@ if (!empty($title) && ($uploadOk == 1)) {
         $stmt = $pdo->prepare($query);
         $stmt->execute([$title,$description,$current_price,$target_file]);
 
+        odziv("Kriptovaluta dodana");
+
         header("Location: cryptocurrencies.php");
         die();
 
